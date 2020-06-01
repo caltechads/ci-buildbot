@@ -1,0 +1,17 @@
+# Ignore any deveopment environment artifacts
+.git
+*.sw*
+.python-version
+.DS_Store
+.idea
+*.bak
+tags
+config.codekit3
+
+# Ignore the sql folder and the static and media files from dev
+run/sql
+run/media/*
+run/static/*
+
+# Ignore any SQL dumps
+*.sql
