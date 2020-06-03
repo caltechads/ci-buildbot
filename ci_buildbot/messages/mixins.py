@@ -85,18 +85,15 @@ class GitMixin(AnnotationMixin):
             origin_url = f"https://{p.host}/{p.owner}/{p.repo}"
             if origin_url.endswith('.git'):
                 origin_url = origin_url[:-4]
-            if p.bitbucket:
-                self.url_patterns['commit'] = f"<{origin_url}/commits/" + "{sha}|{sha}>"
-                self.url_patterns['project'] = f"<{origin_url}/src/" + "{version}/|{name}>"
-                self.url_patterns['diff'] = f"{origin_url}/branches/compare/" + "{from_sha}..{to_sha}#diff"
-            elif p.github:
+            if p.github:
                 self.url_patterns['commit'] = f"<{origin_url}/commit/" + "{sha}|{sha}>"
                 self.url_patterns['project'] = f"<{origin_url}/tree/" + "{version}|{name}>"
                 self.url_patterns['diff'] = f"{origin_url}/compare/" + "{from_sha}..{to_sha}"
             else:
-                self.url_patterns['commit'] = "{sha}"
-                self.url_patterns['project'] = "{name}"
-                self.url_patterns['diff'] = None
+                # Assume bitbucket
+                self.url_patterns['commit'] = f"<{origin_url}/commits/" + "{sha}|{sha}>"
+                self.url_patterns['project'] = f"<{origin_url}/src/" + "{version}/|{name}>"
+                self.url_patterns['diff'] = f"{origin_url}/branches/compare/" + "{from_sha}..{to_sha}#diff"
             self.url_patterns['repo'] = origin_url
 
     def __get_last_version(self, values: Dict[str, str]):
