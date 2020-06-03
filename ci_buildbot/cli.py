@@ -3,12 +3,20 @@ import pprint
 import sys
 
 import click
+
 import slack
+from slack.errors import SlackApiError
 
 import ci_buildbot
 from .settings import Settings
 from .messages import (
-    PushAndArchiveMessage
+    ArchiveCodeMessage,
+    DockerFailureMessage,
+    DockerStartMessage,
+    DockerSuccessMessage,
+    DeployfishDeployFailureMessage,
+    DeployfishDeployStartMessage,
+    DeployfishDeploySuccessMessage
 )
 
 
@@ -36,7 +44,14 @@ def settings(ctx):
     those imported from any environment variable.
     """
     pp = pprint.PrettyPrinter(indent=2)
-    pp.pprint(ctx['settings'].dict())
+    pp.pprint(ctx.obj['settings'].dict())
+
+
+@cli.command('channels', short_help="Print our available channels.")
+@click.pass_context
+def channels(ctx):
+    pp = pprint.PrettyPrinter(indent=2)
+    pp.pprint(ctx.obj['slack'].conversations_list(types="private_channel")['channels'])
 
 
 @cli.group('report', short_help="Report about a build step")
@@ -47,9 +62,121 @@ def report():
 @report.command('archive', short_help="Report about an archive-to-code-drop step")
 @click.pass_context
 def archive(ctx):
-    message = PushAndArchiveMessage()
-    print(message.format())
+    blocks = ArchiveCodeMessage().format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
 
+
+@report.group('docker')
+def report_docker():
+    pass
+
+@report_docker.command('start', short_help="Report about starting a docker build")
+@click.argument('image')
+@click.pass_context
+def report_docker_start(ctx, image):
+    blocks = DockerStartMessage(image=image).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_docker.command('success', short_help="Report about successful docker build")
+@click.argument('image')
+@click.pass_context
+def report_docker_success(ctx, image):
+    blocks = DockerSuccessMessage(image=image).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_docker.command('failure', short_help="Report about a failed docker build")
+@click.argument('image')
+@click.pass_context
+def report_docker_failure(ctx, image):
+    blocks = DockerFailureMessage(image=image).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report.group('deployfish')
+def report_deployfish():
+    pass
+
+
+@report_deployfish.command('start', short_help="Report about starting a deployfish deploy")
+@click.argument('service')
+@click.pass_context
+def report_deployfish_start(ctx, service):
+    blocks = DeployfishDeployStartMessage(service=service).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_deployfish.command('success', short_help="Report about successful deployfish deploy")
+@click.argument('service')
+@click.pass_context
+def report_deployfish_success(ctx, service):
+    blocks = DeployfishDeploySuccessMessage(service=service).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_deployfish.command('failure', short_help="Report about a failed deployfish deploy")
+@click.argument('service')
+@click.pass_context
+def report_deployfish_failure(ctx, service):
+    blocks = DeployfishDeployFailureMessage(service=service).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
 
 def main():
     cli(obj={})

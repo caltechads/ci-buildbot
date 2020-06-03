@@ -14,3 +14,6 @@ version:
 dist: clean
 	@python setup.py sdist
 
+.PHONY: icons
+icons:
+	@aws s3 sync --acl public-read ./icons s3://ads-utils-icons/ci-buildbot/
