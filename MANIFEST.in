@@ -1,8 +1,5 @@
 include requirements.txt
-include cron/*.cron
-include cron/*.init
+include ci_buildbot/templates/*.tpl
 include README.md
-include AUTHORS
 prune test
 graft etc
-graft nagios
