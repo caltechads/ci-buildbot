@@ -74,9 +74,10 @@ def archive(ctx):
         print(f"Got an error: {e.response['error']}")
 
 
-@report.group('docker')
+@report.group('docker', short_help="A group of commands that report about a Docker bmage build step")
 def report_docker():
     pass
+
 
 @report_docker.command('start', short_help="Report about starting a docker build")
 @click.argument('image')
@@ -94,7 +95,7 @@ def report_docker_start(ctx, image):
         print(f"Got an error: {e.response['error']}")
 
 
-@report_docker.command('success', short_help="Report about successful docker build")
+@report_docker.command('success', short_help="Report a successful docker build")
 @click.argument('image')
 @click.pass_context
 def report_docker_success(ctx, image):
@@ -110,7 +111,7 @@ def report_docker_success(ctx, image):
         print(f"Got an error: {e.response['error']}")
 
 
-@report_docker.command('failure', short_help="Report about a failed docker build")
+@report_docker.command('failure', short_help="Report a failed docker build")
 @click.argument('image')
 @click.pass_context
 def report_docker_failure(ctx, image):
@@ -126,7 +127,7 @@ def report_docker_failure(ctx, image):
         print(f"Got an error: {e.response['error']}")
 
 
-@report.group('deployfish')
+@report.group('deployfish', short_help="A group of commands that report about a Deployfish build step")
 def report_deployfish():
     pass
 
@@ -147,7 +148,7 @@ def report_deployfish_start(ctx, service):
         print(f"Got an error: {e.response['error']}")
 
 
-@report_deployfish.command('success', short_help="Report about successful deployfish deploy")
+@report_deployfish.command('success', short_help="Report a successful deployfish deploy")
 @click.argument('service')
 @click.pass_context
 def report_deployfish_success(ctx, service):
@@ -163,7 +164,7 @@ def report_deployfish_success(ctx, service):
         print(f"Got an error: {e.response['error']}")
 
 
-@report_deployfish.command('failure', short_help="Report about a failed deployfish deploy")
+@report_deployfish.command('failure', short_help="Report a failed deployfish deploy")
 @click.argument('service')
 @click.pass_context
 def report_deployfish_failure(ctx, service):
