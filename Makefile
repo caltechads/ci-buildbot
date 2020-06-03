@@ -17,3 +17,12 @@ dist: clean
 .PHONY: icons
 icons:
 	@aws s3 sync --acl public-read ./icons s3://ads-utils-icons/ci-buildbot/
+
+pypi:
+	@twine upload dist/*
+
+tox:
+	# create a tox pyenv virtualenv based on 2.7.x
+	# install tox and tox-pyenv in that ve
+	# actiave that ve before running this
+	@tox

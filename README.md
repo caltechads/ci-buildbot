@@ -1,6 +1,6 @@
 # ci-buildbot
 
-`ci-buildbot` is a command line tool to manage CodePipelines.
+`ci-buildbot` is a command line tool to do slack messaging from CodePipelines.
 
 To install:
 
