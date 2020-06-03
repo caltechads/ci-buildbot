@@ -129,6 +129,13 @@ class GitMixin(AnnotationMixin):
             )
             values['previous_version'] = "initial"
 
+    def get_branch(self):
+        try:
+            return self.repo.head.reference.name
+        except TypeError:
+            # We're in DETACHED_HEAD state, so we have no branch name
+            return ''
+
     def git_changelog(self, values: Dict[str, str]):
         """
         Look through the commits between the current version and the last version
@@ -157,7 +164,7 @@ class GitMixin(AnnotationMixin):
         values['changelog'] = changelog
 
     def __get_concise_info(self):
-        branch = self.repo.head.reference.name
+        branch = self.get_branch()
         current = self.repo.head.commit
         sha = current.hexsha[0:7]
         sha_url = self.url_patterns['commit'].format(sha=sha)
@@ -172,7 +179,7 @@ class GitMixin(AnnotationMixin):
         headcommit = self.repo.head.commit
         values['committer'] = str(headcommit.author)
         values['sha'] = headcommit.hexsha
-        values['branch'] = self.repo.head.reference.name
+        values['branch'] = self.get_branch()
         self.__get_last_version(values)
         # Add the diff URL
         if 'diff' in self.url_patterns:
