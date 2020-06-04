@@ -6,7 +6,7 @@
     "type": "section",
     "text": {
       "type": "mrkdwn",
-      "text": "*{{ last_version_url }}*: code archived to code-drop *SUCCESS*\n*Branch*: {{ branch }}\n*Committer*: {{ committer }}\n*Authors*: {{ authors|join('\\n') }}"
+      "text": "*{{ last_version_url }}*: code archived to code-drop *SUCCESS*\n*Pipeline*: {{ pipeline_url }}\n*Committer*: {{ committer }}\n*Authors*: {{ authors|join('\\n') }}"
     },
     "accessory": {
       "type": "image",
@@ -23,9 +23,6 @@
     }
   },
   {% endif %}
-  {
-    "type": "divider"
-  },
   {
     "type": "section",
     "text": {

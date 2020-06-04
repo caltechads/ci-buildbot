@@ -228,6 +228,21 @@ class CodebuildMixin(AnnotationMixin):
             self.log_group = kwargs['log_group']
         super().__init__(*args, **kwargs)
 
+    def get_build_log_url(self, values):
+        # arn:aws:codebuild:us-west-2:467892444047:build/terraform-caltech-commons-DockerImageBuild:87bd7955-6c38-4554-b353-ac67880e1347
+        fields = os.environ['CODEBUILD_BUILD_ARN'].split(':')
+        values['account_id'] = fields[4]
+        values['build_project_name'] = fields[5].split('/')[1]
+        values['build_id'] = fields[6]
+        # https://us-west-2.console.aws.amazon.com/codesuite/codebuild/467892444047/projects/terraform-caltech-commons-archive/build/terraform-caltech-commons-archive%3Aee76bb3e-fd96-4448-8644-eee93cd0d02b/log?region=us-west-2
+        # https://us-west-2.console.aws.amazon.com/codesuite/codebuild/467892444047/projects/terraform-caltech-commons-DockerImageBuild/build/terraform-caltech-commons-DockerImageBuild%87bd7955-6c38-4554-b353-ac67880e1347/log?region=us-west-2
+        values['build_status_url'] = f"<https://{values['region']}.console.aws.amazon.com/codesuite/codebuild/{values['account_id']}/projects/{values['build_project_name']}/build/{values['build_project_name']}%3A{values['build_id']}/log?region=us-west-2|Click here>"
+
+    def get_pipeline_url(self, values):
+        # https://us-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/terraform-caltech-commons/view?region=us-west-2
+        values['pipeline'] = os.environ['CODEBUILD_INITIATOR'].split('/')[1]
+        values['pipeline_url'] = f"<https://{values['region']}.console.aws.amazon.com/codesuite/codepipeline/pipelines/{values['pipeline']}/view?region=us-west-2|{values['pipeline']}>"
+
     def annotate(self, values: Dict[str, str]):
         super().annotate(values)
         values['status'] = 'Success' if 'CODEBUILD_BUILD_SUCCEEDING' in os.environ else 'Failed'
@@ -237,7 +252,8 @@ class CodebuildMixin(AnnotationMixin):
         build_minutes = int(build_seconds // 60)
         build_seconds = int(build_seconds - build_minutes * 60)
         values['build_time'] = f"{build_minutes}m {build_seconds}s"
-        values['build_status_url'] = f"<https://{values['region']}.console.aws.amazon.com/codebuild/home/?region={values['region']}/builds/{values['build_id']}|Click here>"  # noqa:E501
+        self.get_build_log_url(values)
+        self.get_pipeline_url(values)
 
 
 class DockerImageNameMixin(AnnotationMixin):
