@@ -19,7 +19,7 @@
     "elements": [
       {
         "type": "mrkdwn",
-        "text": "{{ completed_date }}"
+        "text": "{{ completed_date }} {{buildbot}}"
       }
     ]
   }

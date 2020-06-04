@@ -1,4 +1,5 @@
 import datetime
+
 from distutils.core import run_setup
 import json
 import os
@@ -11,6 +12,7 @@ from git import Repo
 from giturlparse import parse
 from pytz import timezone
 
+from ci_buildbot import __version__
 from ..settings import jinja_env
 
 
@@ -30,6 +32,7 @@ class Message:
         now = datetime.datetime.now(timezone('UTC'))
         now_pacific = now.astimezone(timezone('US/Pacific'))
         values['completed_date'] = now_pacific.strftime('%Y-%m-%d %H:%M %Z')
+        values['buildbot'] = f'ci-buildbot-{__version__}'
         template = jinja_env.get_template(self.get_template())
         return(json.loads(template.render(**values)))
 
@@ -248,7 +251,7 @@ class CodebuildMixin(AnnotationMixin):
         values['status'] = 'Success' if 'CODEBUILD_BUILD_SUCCEEDING' in os.environ else 'Failed'
         values['region'] = os.environ['AWS_DEFAULT_REGION']
         values['build_id'] = os.environ.get('CODEBUILD_BUILD_ID', None)
-        build_seconds = time.time() - float(os.environ['CODEBUILD_START_TIME'])
+        build_seconds = time.time() - float(os.environ['CODEBUILD_START_TIME']) / 1000
         build_minutes = int(build_seconds // 60)
         build_seconds = int(build_seconds - build_minutes * 60)
         values['build_time'] = f"{build_minutes}m {build_seconds}s"
