@@ -219,7 +219,9 @@ class GitChangelogMixin:
             authors.add(commit.author.name)
             d = datetime.datetime.fromtimestamp(commit.committed_date).strftime("%Y/%m/%d")
             commit_link = self.url_patterns['commit'].format(sha=commit.hexsha[0:7])
-            changelog.append(f"{commit_link} [{d}] {commit.summary} - {str(commit.author)}")
+            # escape any double quotes in the summary
+            summary = commit.summary.replace('"', r'\"')
+            changelog.append(f"{commit_link} [{d}] {summary} - {str(commit.author)}")
         values['authors'] = sorted(authors)
         values['changelog'] = changelog
 
