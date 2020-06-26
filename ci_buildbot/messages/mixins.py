@@ -212,7 +212,11 @@ class GitChangelogMixin:
             changelog_commits.append(current)
             if current.hexsha == values['last_version_sha']:
                 break
-            current = current.parents[0]
+            try:
+                current = current.parents[0]
+            except IndexError:
+                # We really should never get here
+                break
         changelog = []
         authors = set()
         for commit in changelog_commits:
