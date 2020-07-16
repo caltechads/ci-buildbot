@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="ci-buildbot",
-    version='0.3.1',
+    version='0.4.0',
     description="Slack client for reporting on CodePipeline runs",
     url="https://github.com/caltechads/ci-buildbot",
     author="Caltech IMSS ADS",
