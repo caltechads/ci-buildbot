@@ -6,7 +6,7 @@
     "type": "section",
     "text": {
       "type": "mrkdwn",
-      "text": "*{{ last_version_url }}*: Deployfish deploy *FAILED*\n*Pipeline*: {{ pipeline_url }}\n*Service*: {{ service }}\n*Build log*: {{ build_status_url }}\n*Elapsed time*: {{ build_time }}\n*Tasks*: {{ tasks|join('\\n') }}"
+      "text": "*{{ last_version_url }}*: Deployfish Related Tasks deploy *FAILED*\n*Pipeline*: {{ pipeline_url }}\n*Service*: {{ service }}\n*Build log*: {{ build_status_url }}\n*Elapsed time*: {{ build_time }}\n*Tasks*: {{ tasks|join('\\n') }}"
     },
     "accessory": {
       "type": "image",

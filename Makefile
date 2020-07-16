@@ -20,7 +20,7 @@ dist: clean
 icons:
 	@aws s3 sync --acl public-read ./icons s3://ads-utils-icons/ci-buildbot/
 
-pypi:
+pypi: dist
 	@twine upload dist/*
 
 tox:
