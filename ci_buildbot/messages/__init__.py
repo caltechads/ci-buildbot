@@ -11,3 +11,8 @@ from .deployfish import (
     DeployfishDeploySuccessMessage,
     DeployfishDeployStartMessage
 )
+from .deployfish_tasks import (
+    DeployfishTasksDeployFailureMessage,
+    DeployfishTasksDeploySuccessMessage,
+    DeployfishTasksDeployStartMessage
+)

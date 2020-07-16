@@ -11,6 +11,7 @@ import docker
 from git import Repo
 from giturlparse import parse
 from pytz import timezone
+import sh
 
 from ci_buildbot import __version__
 from ..settings import jinja_env
@@ -305,3 +306,10 @@ class DeployfishDeployMixin(AnnotationMixin):
     def annotate(self, values: Dict[str, str]):
         super().annotate(values)
         values['service'] = self.service
+
+
+class DeployfishTasksDeployMixin(DeployfishDeployMixin):
+
+    def annotate(self, values: Dict[str, str]):
+        super().annotate(values)
+        values['tasks'] = sh.deploy('related-tasks', self.service).split('\n')

@@ -11,7 +11,7 @@
     "accessory": {
       "type": "image",
       "image_url":  "https://ads-utils-icons.s3-us-west-2.amazonaws.com/ci-buildbot/deploy-failed.png",
-      "alt_text": "Docker build"
+      "alt_text": "Deploy service failed"
     }
   },
   {
