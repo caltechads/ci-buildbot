@@ -182,16 +182,20 @@ def report_deployfish_failure(ctx, service):
     except SlackApiError as e:
         print(f"Got an error: {e.response['error']}")
 
-@report.group('deployfish-tasks', short_help="A group of commands that report about a Deployfish related-tasks build step")
+
+@report.group(
+    'deployfish-tasks',
+    short_help="A group of commands that report about a Deployfish one-off tasks build step"
+)
 def report_deployfish_tasks():
     pass
 
 
-@report_deployfish_tasks.command('start', short_help="Report about starting a deployfish related-tasks deploy")
-@click.argument('service')
+@report_deployfish_tasks.command('start', short_help="Report about starting a deployfish one-off tasks deploy")
+@click.argument('tasks', nargs=-1, required=True)
 @click.pass_context
-def report_deployfish_tasks_start(ctx, service):
-    blocks = DeployfishTasksDeployStartMessage(service=service).format()
+def report_deployfish_tasks_start(ctx, tasks):
+    blocks = DeployfishTasksDeployStartMessage(tasks=tasks).format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -203,11 +207,11 @@ def report_deployfish_tasks_start(ctx, service):
         print(f"Got an error: {e.response['error']}")
 
 
-@report_deployfish_tasks.command('success', short_help="Report a successful deployfish deploy")
-@click.argument('service')
+@report_deployfish_tasks.command('success', short_help="Report a successful deployfish one-off tasks deploy")
+@click.argument('tasks', nargs=-1, required=True)
 @click.pass_context
-def report_deployfish_tasks_success(ctx, service):
-    blocks = DeployfishTasksDeploySuccessMessage(service=service).format()
+def report_deployfish_tasks_success(ctx, tasks):
+    blocks = DeployfishTasksDeploySuccessMessage(tasks=tasks).format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -219,11 +223,11 @@ def report_deployfish_tasks_success(ctx, service):
         print(f"Got an error: {e.response['error']}")
 
 
-@report_deployfish_tasks.command('failure', short_help="Report a failed deployfish deploy")
-@click.argument('service')
+@report_deployfish_tasks.command('failure', short_help="Report a failed deployfish one-off tasks deploy")
+@click.argument('tasks', nargs=-1, required=True)
 @click.pass_context
-def report_deployfish_tasks_failure(ctx, service):
-    blocks = DeployfishTasksDeployFailureMessage(service=service).format()
+def report_deployfish_tasks_failure(ctx, tasks):
+    blocks = DeployfishTasksDeployFailureMessage(tasks=tasks).format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(

@@ -46,9 +46,6 @@ class AnnotationMixin:
 
 class PythonMixin(AnnotationMixin):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def annotate(self, values: Dict[str, str]):
         """
         Extract some stuff from setup.py, if present.
@@ -75,7 +72,7 @@ class GitMixin(AnnotationMixin):
         self.url_patterns = {}
         self.__get_repo()
         self.__build_url_patterns()
-        super().__init__(*args, **kwargs)
+        super().__init__()
 
     def __get_repo(self):
         if not self.repo:
@@ -298,18 +295,26 @@ class DockerMixin(AnnotationMixin):
 class DeployfishDeployMixin(AnnotationMixin):
 
     def __init__(self, *args, **kwargs):
+        self.service = None
         if 'service' in kwargs:
             self.service = kwargs['service']
             del kwargs['service']
-        super().__init__(*args, **kwargs)
+        super().__init__()
 
     def annotate(self, values: Dict[str, str]):
         super().annotate(values)
         values['service'] = self.service
 
 
-class DeployfishTasksDeployMixin(DeployfishDeployMixin):
+class DeployfishTasksDeployMixin(AnnotationMixin):
+
+    def __init__(self, *args, **kwargs):
+        self.tasks = None
+        if 'tasks' in kwargs:
+            self.tasks = kwargs['tasks']
+            del kwargs['tasks']
+        super().__init__()
 
     def annotate(self, values: Dict[str, str]):
         super().annotate(values)
-        values['tasks'] = sh.deploy('related-tasks', self.service).split('\n')
+        values['tasks'] = self.tasks

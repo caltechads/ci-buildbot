@@ -41,6 +41,7 @@ For the red icons, I use #801B0B
 # Testing: CodeBuild environment variables
 
 ```
+export CODEBUILD_START_TIME=1594856732.3577878
 export CODEBUILD_VPC_AZ=us-west-2b
 export CODEBUILD_LAST_EXIT=0
 export CODEBUILD_START_TIME=1538752095466
