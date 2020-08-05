@@ -83,7 +83,11 @@ class GitMixin(AnnotationMixin):
         #
         if not self.url_patterns:
             p = parse(self.repo.remote().url)
-            origin_url = f"https://{p.host}/{p.owner}/{p.repo}"
+            host = p.host
+            if host.startswith('codestar-connections'):
+                # We're in a CodePipeline, and our true origin is masked.  Assume bitbucket.
+                host = "bitbucket.org"
+            origin_url = f"https://{host}/{p.owner}/{p.repo}"
             if origin_url.endswith('.git'):
                 origin_url = origin_url[:-4]
             if p.github:
