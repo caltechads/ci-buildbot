@@ -1,19 +1,19 @@
 from .mixins import (
     GitMixin,
-    PythonMixin,
+    NameVersionMixin,
     CodebuildMixin,
     DeployfishDeployMixin,
     Message
 )
 
 
-class DeployfishDeployStartMessage(DeployfishDeployMixin, CodebuildMixin, GitMixin, PythonMixin, Message):
+class DeployfishDeployStartMessage(DeployfishDeployMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
     template = 'deploy_start.tpl'
 
 
-class DeployfishDeploySuccessMessage(DeployfishDeployMixin, CodebuildMixin, GitMixin, PythonMixin, Message):
+class DeployfishDeploySuccessMessage(DeployfishDeployMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
     template = 'deploy_success.tpl'
 
 
-class DeployfishDeployFailureMessage(DeployfishDeployMixin, CodebuildMixin, GitMixin, PythonMixin, Message):
+class DeployfishDeployFailureMessage(DeployfishDeployMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
     template = 'deploy_failed.tpl'

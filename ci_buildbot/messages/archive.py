@@ -1,12 +1,12 @@
 
 from .mixins import (
     CodebuildMixin,
-    PythonMixin,
+    NameVersionMixin,
     GitMixin,
     GitChangelogMixin,
     Message
 )
 
 
-class ArchiveCodeMessage(GitChangelogMixin, CodebuildMixin, GitMixin, PythonMixin, Message):
+class ArchiveCodeMessage(GitChangelogMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
     template = 'archive.tpl'

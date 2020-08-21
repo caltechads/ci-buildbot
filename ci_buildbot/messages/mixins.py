@@ -4,6 +4,7 @@ from distutils.core import run_setup
 import json
 import os
 import pathlib
+import subprocess
 import time
 from typing import Dict
 
@@ -35,7 +36,8 @@ class Message:
         values['completed_date'] = now_pacific.strftime('%Y-%m-%d %H:%M %Z')
         values['buildbot'] = f'ci-buildbot-{__version__}'
         template = jinja_env.get_template(self.get_template())
-        return(json.loads(template.render(**values)))
+        rendered = template.render(**values)
+        return json.loads(rendered)
 
 
 class AnnotationMixin:
@@ -44,7 +46,7 @@ class AnnotationMixin:
         pass
 
 
-class PythonMixin(AnnotationMixin):
+class NameVersionMixin(AnnotationMixin):
 
     def annotate(self, values: Dict[str, str]):
         """
@@ -63,6 +65,14 @@ class PythonMixin(AnnotationMixin):
             python_setup = run_setup(str(setup_py))
             values['name'] = python_setup.get_name()
             values['version'] = python_setup.get_version()
+            return
+
+        # No setup.py; let's try Makefile
+        makefile = pathlib.Path.cwd() / 'Makefile'
+        if makefile.exists():
+            values['name'] = subprocess.check_output(['make', 'image_name']).decode('utf8').strip()
+            values['version'] = subprocess.check_output(['make', 'version']).decode('utf8').strip()
+            return
 
 
 class GitMixin(AnnotationMixin):
