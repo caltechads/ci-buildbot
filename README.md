@@ -35,7 +35,7 @@ buildbot --help
 I get the icons for the Slack messages here: https://iconmonstr.com.
 
 For the gray icons, I use #909090
-For the green icons, I use #?
+For the green icons, I use #0D6B19
 For the red icons, I use #801B0B
 
 # Testing: CodeBuild environment variables

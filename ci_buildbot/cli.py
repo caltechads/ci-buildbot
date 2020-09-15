@@ -19,7 +19,10 @@ from .messages import (
     DeployfishDeploySuccessMessage,
     DeployfishTasksDeployFailureMessage,
     DeployfishTasksDeployStartMessage,
-    DeployfishTasksDeploySuccessMessage
+    DeployfishTasksDeploySuccessMessage,
+    GeneralFailureMessage,
+    GeneralStartMessage,
+    GeneralSuccessMessage,
 )
 
 
@@ -237,6 +240,61 @@ def report_deployfish_tasks_failure(ctx, tasks):
         )
     except SlackApiError as e:
         print(f"Got an error: {e.response['error']}")
+
+
+@report.group('general', short_help="A group of commands that report about a Deployfish service build step")
+def report_general():
+    pass
+
+
+@report_general.command('start', short_help="Report about starting a general service deploy")
+@click.argument('label')
+@click.pass_context
+def report_general_start(ctx, label):
+    blocks = GeneralStartMessage(label=label).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_general.command('success', short_help="Report a successful general service deploy")
+@click.argument('label')
+@click.pass_context
+def report_general_success(ctx, label):
+    blocks = GeneralSuccessMessage(label=label).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_general.command('failure', short_help="Report a failed general service deploy")
+@click.argument('label')
+@click.pass_context
+def report_general_failure(ctx, label):
+    blocks = GeneralFailureMessage(label=label).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
 
 def main():
     cli(obj={})
