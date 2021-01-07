@@ -23,6 +23,9 @@ from .messages import (
     GeneralFailureMessage,
     GeneralStartMessage,
     GeneralSuccessMessage,
+    UnittestsFailureMessage,
+    UnittestsStartMessage,
+    UnittestsSuccessMessage,
 )
 
 
@@ -89,7 +92,7 @@ def report_docker():
 @click.argument('image')
 @click.pass_context
 def report_docker_start(ctx, image):
-    blocks = DockerStartMessage(image=image).format()
+    blocks = DockerStartMessage().format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -122,6 +125,55 @@ def report_docker_success(ctx, image):
 @click.pass_context
 def report_docker_failure(ctx, image):
     blocks = DockerFailureMessage(image=image).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+@report.group('unittests', short_help="A group of commands that report about a test runner build step")
+def report_unittests():
+    pass
+
+
+@report_unittests.command('start', short_help="Report about starting a test runner build")
+@click.pass_context
+def report_unittests_start(ctx):
+    blocks = UnittestsStartMessage().format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_unittests.command('success', short_help="Report a successful test runner build")
+@click.pass_context
+def report_unittests_success(ctx):
+    blocks = UnittestsSuccessMessage().format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_unittests.command('failure', short_help="Report a failed test runner build")
+@click.pass_context
+def report_unittests_failure(ctx):
+    blocks = UnittestsFailureMessage().format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(

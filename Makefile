@@ -6,7 +6,7 @@ PACKAGE = ci-buildbot
 
 clean:
 	rm -rf *.tar.gz dist *.egg-info *.rpm
-	find . -name "__pycache__" -exec rm -rf '{}' ';'
+	find . -name "__pycache__" | xargs rm -rf
 
 version:
 	@echo $(VERSION)
