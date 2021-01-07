@@ -92,7 +92,7 @@ def report_docker():
 @click.argument('image')
 @click.pass_context
 def report_docker_start(ctx, image):
-    blocks = DockerStartMessage().format()
+    blocks = DockerStartMessage(image=image).format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -134,6 +134,7 @@ def report_docker_failure(ctx, image):
         )
     except SlackApiError as e:
         print(f"Got an error: {e.response['error']}")
+
 
 @report.group('unittests', short_help="A group of commands that report about a test runner build step")
 def report_unittests():
