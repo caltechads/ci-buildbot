@@ -1,8 +1,9 @@
 from .mixins import (
-    NameVersionMixin,
-    GitMixin,
     CodebuildMixin,
-    Message
+    GitMixin,
+    Message,
+    NameVersionMixin,
+    UnittestReportGroupMixin,
 )
 
 
@@ -10,9 +11,9 @@ class UnittestsStartMessage(CodebuildMixin, GitMixin, NameVersionMixin, Message)
     template = 'unittests_start.tpl'
 
 
-class UnittestsSuccessMessage(CodebuildMixin, GitMixin, NameVersionMixin, Message):
+class UnittestsSuccessMessage(UnittestReportGroupMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
     template = 'unittests_success.tpl'
 
 
-class UnittestsFailureMessage(CodebuildMixin, GitMixin, NameVersionMixin, Message):
+class UnittestsFailureMessage(UnittestReportGroupMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
     template = 'unittests_failed.tpl'

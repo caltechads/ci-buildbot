@@ -332,3 +332,25 @@ class DeployfishTasksDeployMixin(AnnotationMixin):
     def annotate(self, values: Dict[str, str]):
         super().annotate(values)
         values['tasks'] = self.tasks
+
+
+class UnittestReportGroupMixin(AnnotationMixin):
+    """
+    This needs to come before CodebuildMixin in the class hierarchy, because it depends on things that that mixin
+    discovers.
+    """
+
+    def __init__(self, *args, **kwargs):
+        if 'report_group' in kwargs:
+            self.report_group = kwargs['report_group']
+            del kwargs['report_group']
+        super().__init__()
+
+    def get_reports_url(self, values):
+        # https://us-west-2.console.aws.amazon.com/codesuite/codebuild/467892444047/testReports/reportGroups/tcc-unittests-Unittests-Unittests?region=us-west-2
+        values['report_group_url'] = f"<https://{values['region']}.console.aws.amazon.com/codesuite/codebuild/{values['account_id']}/testReports/reportGroups/{self.report_group}?region={values['region']}|{values['report_group']}>"
+
+    def annotate(self, values: Dict[str, str]):
+        super().annotate(values)
+        values['report_group'] = self.report_group
+        self.get_reports_url(values)

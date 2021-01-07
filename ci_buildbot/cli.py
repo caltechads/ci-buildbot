@@ -157,9 +157,10 @@ def report_unittests_start(ctx):
 
 
 @report_unittests.command('success', short_help="Report a successful test runner build")
+@click.argument('report_group')
 @click.pass_context
-def report_unittests_success(ctx):
-    blocks = UnittestsSuccessMessage().format()
+def report_unittests_success(ctx, report_group):
+    blocks = UnittestsSuccessMessage(report_group=report_group).format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -172,9 +173,10 @@ def report_unittests_success(ctx):
 
 
 @report_unittests.command('failure', short_help="Report a failed test runner build")
+@click.argument('report_group')
 @click.pass_context
-def report_unittests_failure(ctx):
-    blocks = UnittestsFailureMessage().format()
+def report_unittests_failure(ctx, report_group):
+    blocks = UnittestsFailureMessage(report_group=report_group).format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -346,7 +348,6 @@ def report_general_failure(ctx, label):
         )
     except SlackApiError as e:
         print(f"Got an error: {e.response['error']}")
-
 
 
 def main():

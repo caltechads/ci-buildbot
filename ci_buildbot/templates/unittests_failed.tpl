@@ -6,7 +6,7 @@
     "type": "section",
     "text": {
       "type": "mrkdwn",
-      "text": "*{{ last_version_url }}*: Docker build and push *FAILED*\n*Pipeline*: {{pipeline_url}}\n*Build log*: {{ build_status_url }}\n*Build time*: {{ build_time }}\n*Git*: {{ git_info }}"
+      "text": "*{{ last_version_url }}*: Unittests *FAILED*\n*Pipeline*: {{pipeline_url}}\n*Build log*: {{ build_status_url }}\n*Test Reports*: {{report_group_url}}\n*Build time*: {{ build_time }}\n*Git*: {{ git_info }}"
     },
     "accessory": {
       "type": "image",
