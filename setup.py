@@ -26,7 +26,7 @@ setup(
         "giturlparse >= 0.9.2",
         "click >= 7.0",
         "jinja2 >= 2.11.1",
-        "pydantic == 1.4",
+        "pydantic == 1.6.2",
         "pytz == 2019.1",
         "sh == 1.13.1"
     ],
