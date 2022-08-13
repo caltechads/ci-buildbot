@@ -6,6 +6,11 @@ from .docker import (
     DockerSuccessMessage,
     DockerStartMessage
 )
+from .docs import (
+    DocsFailureMessage,
+    DocsSuccessMessage,
+    DocsStartMessage
+)
 from .deployfish import (
     DeployfishDeployFailureMessage,
     DeployfishDeploySuccessMessage,

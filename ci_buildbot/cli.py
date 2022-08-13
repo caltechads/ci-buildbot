@@ -14,6 +14,9 @@ from .messages import (
     DockerFailureMessage,
     DockerStartMessage,
     DockerSuccessMessage,
+    DocsFailureMessage,
+    DocsStartMessage,
+    DocsSuccessMessage,
     DeployfishDeployFailureMessage,
     DeployfishDeployStartMessage,
     DeployfishDeploySuccessMessage,
@@ -286,6 +289,59 @@ def report_deployfish_tasks_success(ctx, tasks):
 @click.pass_context
 def report_deployfish_tasks_failure(ctx, tasks):
     blocks = DeployfishTasksDeployFailureMessage(tasks=tasks).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report.group('docs', short_help="A group of commands that report about a Deployfish service build step")
+def report_docs():
+    pass
+
+
+@report_docs.command('start', short_help="Report about starting a Sphinx docs build and deploy")
+@click.argument('url')
+@click.pass_context
+def report_docs_start(ctx, url):
+    blocks = DocsStartMessage(url=url).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_docs.command('success', short_help="Report a successful Sphinx docs build and deploy")
+@click.argument('url')
+@click.pass_context
+def report_docs_success(ctx, url):
+    blocks = DocsSuccessMessage(url=url).format()
+    client = ctx.obj['slack']
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj['settings'].channel,
+            blocks=blocks,
+            as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_docs.command('failure', short_help="Report a failed Sphinx docs build and deploy")
+@click.argument('url')
+@click.pass_context
+def report_docs_failure(ctx, url):
+    blocks = DocsFailureMessage(url=url).format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(

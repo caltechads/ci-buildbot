@@ -5,8 +5,8 @@ order to do its work.
 
 To install:
 
-```
-pyenv virtualenv 3.6.5 ci-buildbot
+```bash
+pyenv virtualenv 3.8.5 ci-buildbot
 pyenv local ci-buildbot
 pip install -r requirements.txt
 pip install -e .
@@ -14,33 +14,40 @@ pip install -e .
 
 Now set up the environment:
 
-```
+```bash
 cp etc/environment.text .env
 ```
 
-You'll need to know two things: 
+You'll need to know two things:
 
 * `SLACK_API_TOKEN`: this your Slack app's Oath token
-* `CHANNEL`: this is the channel you want `ci-buildbot` to post into.  Note that if this is a private channel, you'll
-	need to invite the `ci-buildbot` app into that channel before you'll see any messages.
+* `CHANNEL`: this is the channel you want `ci-buildbot` to post into.  Note that if this is a private channel, you'll need to invite the `ci-buildbot` app into that channel before you'll see any messages.
 
 Now you can run the main command, `buildbot`:
 
-```
+```bash
 buildbot --help
 ```
 
-# Icons
+## Icons
 
 I get the icons for the Slack messages here: https://iconmonstr.com.
 
-For the gray icons, I use #909090
-For the green icons, I use #0D6B19
-For the red icons, I use #801B0B
+Get them as .pngs, 64x64px, name them appropriately to the build steps they're going to be used in, and save them to `./icons/`
 
-# Testing: CodeBuild environment variables
+For the gray icons (`foo-start.png`), use #909090 as the icon color.
+For the green icons (`foo-success.png`), use #0D6B19 as the icon color.
+For the red icons (`foo-failure.png`), use #801B0B as the icon color.
 
+`ci-buildbot` tells slack to retrieve the icons from an S3 bucket: ads-utils-icons.s3.amanzonaws.com.  Do this to sync `./icons` to S3:
+
+```bash
+make icons
 ```
+
+## Testing: CodeBuild environment variables
+
+```bash
 export CODEBUILD_START_TIME=1594856732.3577878
 export CODEBUILD_VPC_AZ=us-west-2b
 export CODEBUILD_LAST_EXIT=0
