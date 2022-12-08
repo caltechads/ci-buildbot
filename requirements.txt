@@ -16,9 +16,8 @@ pytz==2019.1                                  # https://github.com/stub42/pytz
 
 # Deployment
 # ------------------------------------------------------------------------------
-bumpversion==0.5.3                            # https://github.com/peritus/bumpversion
-Sphinx==2.0.1                                 # https://github.com/sphinx-doc/sphinx
-ipython>=7.13.0                                # https://github.com/ipython/ipython
+bump2version==1.0.1                           # https://github.com/peritus/bumpversion
+ipython>=7.13.0                               # https://github.com/ipython/ipython
 twine                                         # https://github.com/pypa/twine/
 tox                                           # https://github.com/tox-dev/to
 wheel                                         # https://github.com/pypa/wheel
@@ -28,6 +27,7 @@ wheel                                         # https://github.com/pypa/wheel
 autopep8                                      # https://github.com/hhatto/autopep8
 flake8                                        # https://github.com/PyCQA/flake8
 mypy                                          # https://github.com/python/mypy
+pylint
 
 # Testing
 # ------------------------------------------------------------------------------

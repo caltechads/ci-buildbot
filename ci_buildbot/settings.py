@@ -1,5 +1,5 @@
-from pathlib import Path  # python3 only
-#from typing import Union, List, Dict
+from pathlib import Path
+from typing import Optional
 
 from jinja2 import FileSystemLoader, Environment
 from pydantic import BaseSettings
@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     """
     See https://pydantic-docs.helpmanual.io/#settings for details on using and overriding this.
     """
-    api_token: str = None
+    api_token: Optional[str] = None
 
     debug: bool = False
 

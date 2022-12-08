@@ -1,20 +1,38 @@
-from .mixins import (
-    AnnotationMixin,
-    NameVersionMixin,
-    GitMixin,
-    CodebuildMixin,
-    Message,
-    SphinxMixin
+from ..context_processors import (
+    NameVersionProcessor,
+    GitProcessor,
+    CodebuildProcessor,
+    SphinxProcessor
 )
+from .base import Message
 
 
-class DocsStartMessage(SphinxMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
+class DocsStartMessage(Message):
+
     template = 'docs_start.tpl'
+    context_processors = [
+        NameVersionProcessor,
+        GitProcessor,
+        CodebuildProcessor,
+        SphinxProcessor
+    ]
 
 
-class DocsSuccessMessage(SphinxMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
+class DocsSuccessMessage(Message):
     template = 'docs_success.tpl'
+    context_processors = [
+        NameVersionProcessor,
+        GitProcessor,
+        CodebuildProcessor,
+        SphinxProcessor
+    ]
 
 
-class DocsFailureMessage(SphinxMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
+class DocsFailureMessage(Message):
     template = 'docs_failed.tpl'
+    context_processors = [
+        NameVersionProcessor,
+        GitProcessor,
+        CodebuildProcessor,
+        SphinxProcessor
+    ]

@@ -92,10 +92,11 @@ def report_docker():
 
 
 @report_docker.command('start', short_help="Report about starting a docker build")
+@click.option('--changelog/--no-changelog', default=False, help="Include the git changelog.")
 @click.argument('image')
 @click.pass_context
-def report_docker_start(ctx, image):
-    blocks = DockerStartMessage(image=image).format()
+def report_docker_start(ctx, image: str, changelog: bool):
+    blocks = DockerStartMessage().format(image=image, changelog=changelog)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -111,7 +112,7 @@ def report_docker_start(ctx, image):
 @click.argument('image')
 @click.pass_context
 def report_docker_success(ctx, image):
-    blocks = DockerSuccessMessage(image=image).format()
+    blocks = DockerSuccessMessage().format(image=image)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -127,7 +128,7 @@ def report_docker_success(ctx, image):
 @click.argument('image')
 @click.pass_context
 def report_docker_failure(ctx, image):
-    blocks = DockerFailureMessage(image=image).format()
+    blocks = DockerFailureMessage().format(image=image)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -163,7 +164,7 @@ def report_unittests_start(ctx):
 @click.argument('report_group')
 @click.pass_context
 def report_unittests_success(ctx, report_group):
-    blocks = UnittestsSuccessMessage(report_group=report_group).format()
+    blocks = UnittestsSuccessMessage().format(report_group=report_group)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -179,7 +180,7 @@ def report_unittests_success(ctx, report_group):
 @click.argument('report_group')
 @click.pass_context
 def report_unittests_failure(ctx, report_group):
-    blocks = UnittestsFailureMessage(report_group=report_group).format()
+    blocks = UnittestsFailureMessage().format(report_group=report_group)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -200,7 +201,7 @@ def report_deployfish():
 @click.argument('service')
 @click.pass_context
 def report_deployfish_start(ctx, service):
-    blocks = DeployfishDeployStartMessage(service=service).format()
+    blocks = DeployfishDeployStartMessage().format(service=service)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -216,7 +217,7 @@ def report_deployfish_start(ctx, service):
 @click.argument('service')
 @click.pass_context
 def report_deployfish_success(ctx, service):
-    blocks = DeployfishDeploySuccessMessage(service=service).format()
+    blocks = DeployfishDeploySuccessMessage().format(service=service)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -232,7 +233,7 @@ def report_deployfish_success(ctx, service):
 @click.argument('service')
 @click.pass_context
 def report_deployfish_failure(ctx, service):
-    blocks = DeployfishDeployFailureMessage(service=service).format()
+    blocks = DeployfishDeployFailureMessage().format(service=service)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -256,7 +257,7 @@ def report_deployfish_tasks():
 @click.argument('tasks', nargs=-1, required=True)
 @click.pass_context
 def report_deployfish_tasks_start(ctx, tasks):
-    blocks = DeployfishTasksDeployStartMessage(tasks=tasks).format()
+    blocks = DeployfishTasksDeployStartMessage().format(tasks=tasks)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -272,7 +273,7 @@ def report_deployfish_tasks_start(ctx, tasks):
 @click.argument('tasks', nargs=-1, required=True)
 @click.pass_context
 def report_deployfish_tasks_success(ctx, tasks):
-    blocks = DeployfishTasksDeploySuccessMessage(tasks=tasks).format()
+    blocks = DeployfishTasksDeploySuccessMessage().format(tasks=tasks)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -288,7 +289,7 @@ def report_deployfish_tasks_success(ctx, tasks):
 @click.argument('tasks', nargs=-1, required=True)
 @click.pass_context
 def report_deployfish_tasks_failure(ctx, tasks):
-    blocks = DeployfishTasksDeployFailureMessage(tasks=tasks).format()
+    blocks = DeployfishTasksDeployFailureMessage().format(tasks=tasks)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -309,7 +310,7 @@ def report_docs():
 @click.argument('url')
 @click.pass_context
 def report_docs_start(ctx, url):
-    blocks = DocsStartMessage(url=url).format()
+    blocks = DocsStartMessage().format(url=url)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -325,7 +326,7 @@ def report_docs_start(ctx, url):
 @click.argument('url')
 @click.pass_context
 def report_docs_success(ctx, url):
-    blocks = DocsSuccessMessage(url=url).format()
+    blocks = DocsSuccessMessage().format(url=url)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -341,7 +342,7 @@ def report_docs_success(ctx, url):
 @click.argument('url')
 @click.pass_context
 def report_docs_failure(ctx, url):
-    blocks = DocsFailureMessage(url=url).format()
+    blocks = DocsFailureMessage().format(url=url)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -362,7 +363,7 @@ def report_general():
 @click.argument('label')
 @click.pass_context
 def report_general_start(ctx, label):
-    blocks = GeneralStartMessage(label=label).format()
+    blocks = GeneralStartMessage().format(label=label)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -378,7 +379,7 @@ def report_general_start(ctx, label):
 @click.argument('label')
 @click.pass_context
 def report_general_success(ctx, label):
-    blocks = GeneralSuccessMessage(label=label).format()
+    blocks = GeneralSuccessMessage().format(label=label)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -394,7 +395,7 @@ def report_general_success(ctx, label):
 @click.argument('label')
 @click.pass_context
 def report_general_failure(ctx, label):
-    blocks = GeneralFailureMessage(label=label).format()
+    blocks = GeneralFailureMessage().format(label=label)
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -407,7 +408,7 @@ def report_general_failure(ctx, label):
 
 
 def main():
-    cli(obj={})
+    cli(obj={})  # pylint: disable=no-value-for-parameter,unexpected-keyword-arg
 
 
 if __name__ == '__main__':

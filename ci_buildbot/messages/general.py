@@ -1,35 +1,40 @@
-from typing import Dict
-
-from .mixins import (
-    AnnotationMixin,
-    GitMixin,
-    NameVersionMixin,
-    CodebuildMixin,
-    Message
+from ..context_processors import (
+    GenericProcessor,
+    CodebuildProcessor,
+    GitProcessor,
+    NameVersionProcessor
 )
+from .base import Message
 
 
-class GeneralMixin(AnnotationMixin):
+class GeneralStartMessage(Message):
 
-    def __init__(self, *args, **kwargs):
-        self.label = None
-        if 'label' in kwargs:
-            self.label = kwargs['label']
-            del kwargs['label']
-        super().__init__()
-
-    def annotate(self, values: Dict[str, str]):
-        super().annotate(values)
-        values['label'] = self.label
-
-
-class GeneralStartMessage(GeneralMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
     template = 'general_start.tpl'
+    context_processors = [
+        GenericProcessor,
+        GitProcessor,
+        CodebuildProcessor,
+        NameVersionProcessor
+    ]
 
 
-class GeneralSuccessMessage(GeneralMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
+class GeneralSuccessMessage(Message):
+
     template = 'general_success.tpl'
+    context_processors = [
+        GenericProcessor,
+        GitProcessor,
+        CodebuildProcessor,
+        NameVersionProcessor
+    ]
 
 
-class GeneralFailureMessage(GeneralMixin, CodebuildMixin, GitMixin, NameVersionMixin, Message):
+class GeneralFailureMessage(Message):
+
     template = 'general_failed.tpl'
+    context_processors = [
+        GenericProcessor,
+        GitProcessor,
+        CodebuildProcessor,
+        NameVersionProcessor
+    ]
