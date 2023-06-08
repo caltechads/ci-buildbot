@@ -6,11 +6,22 @@ from .base import AbstractContextProcessor
 
 class UnittestReportGroupProcessor(AbstractContextProcessor):
     """
-    This needs to come before CodebuildMixin in the class hierarchy, because it
-    depends on things that that mixin discovers.
+    Adds the following keys to the context:
+
+    * ``report_group``: the name of the CodeBuild report group that contains the
+        unit test results for this pipeline run.
+    * ``report_group_url``: the URL to the CodeBuild report group that contains
+        the unit test results for this pipeline run.
+
+    .. important::
+        This needs to come before
+        :py:class:`ci_buildbot.context_processors.codebuild.CodebuildProcessor``
+        in the processor list, because it depends on things that that processor
+        discovers.
     """
 
     def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.report_group: Optional[str] = kwargs['report_group']
 
     def get_reports_url(self, context: MessageContext) -> None:

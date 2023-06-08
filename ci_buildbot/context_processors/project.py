@@ -9,19 +9,29 @@ from .base import AbstractContextProcessor
 
 class NameVersionProcessor(AbstractContextProcessor):
     """
-    Get our project name and our project version and add it to our message
-    context.
+    A context processor that adds the following keys to the context:
+
+    * ``name``: the project name
+    * ``version``: the current version of the project
+
+    If this is a python project, we'll get the name and version from setup.py.
+
+    If not, we'll try to get it from Makefile by doing ``make image_name``
+    for the name and ``make version`` for the version.
     """
 
     def annotate(self, context: MessageContext) -> None:
         """
-        Extract some stuff from setup.py, if present.
+        Add the following keys to ``context``:
 
-        If setup.py is present, we'll add the following keys to `values`:
+        * ``name``: the project name
+        * ``version``: the current version of the project
 
-        * ``name``: the output of ``python setup.py name``
-        * ``version``: the output of ``python setup.py version``
+        If this is a python project, we'll get the name and version from
+        setup.py.
 
+        If not, we'll try to get it from Makefile by doing ``make image_name``
+        for the name and ``make version`` for the version.
         """
         super().annotate(context)
         setup_py = pathlib.Path.cwd() / 'setup.py'

@@ -12,13 +12,21 @@ from ..typedefs import MessageContext
 
 
 class Message:
+    """
+    The base class for all slack messages.
+    """
 
+    #: The name of the Jinja template to use to render this message.
     template: Optional[str] = None
+    #: The list of context processors to use to annotate the message context.
     context_processors: List[Type[AbstractContextProcessor]] = []
 
     def get_template(self) -> str:
         """
         Return the filename of the Jinja template to use to render our slack message.
+
+        Raises:
+            ImproperlyConfigured: if the subclass does not define a template.
 
         Returns:
             The name of the Jinja template.
@@ -30,6 +38,11 @@ class Message:
     def format(self, **kwargs) -> Dict[str, Any]:
         """
         Generate the full JSON blob to send to slack.
+
+        Adds the following keys to the context:
+
+        * ``completed_date``: the date and time the build step finished
+        * ``buildbot``: our the name and version
 
         Returns:
             The data structure to send to slack as our message.

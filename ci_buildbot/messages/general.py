@@ -11,10 +11,10 @@ class GeneralStartMessage(Message):
 
     template = 'general_start.tpl'
     context_processors = [
+        NameVersionProcessor,
         GenericProcessor,
         GitProcessor,
         CodebuildProcessor,
-        NameVersionProcessor
     ]
 
 
@@ -22,10 +22,10 @@ class GeneralSuccessMessage(Message):
 
     template = 'general_success.tpl'
     context_processors = [
+        NameVersionProcessor,
         GenericProcessor,
         GitProcessor,
         CodebuildProcessor,
-        NameVersionProcessor
     ]
 
 
@@ -33,8 +33,8 @@ class GeneralFailureMessage(Message):
 
     template = 'general_failed.tpl'
     context_processors = [
+        NameVersionProcessor,
         GenericProcessor,
         GitProcessor,
         CodebuildProcessor,
-        NameVersionProcessor
     ]

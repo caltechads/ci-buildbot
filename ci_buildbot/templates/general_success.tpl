@@ -6,7 +6,7 @@
     "type": "section",
     "text": {
       "type": "mrkdwn",
-      "text": "*{{ last_version_url }}*: {{ label }}*SUCCESS*\n*Pipeline*: {{pipeline_url}}\nBuild log*: {{ build_status_url }}\n*Elapsed time*: {{ build_time }}\n"
+      "text": "*{{ last_version_url }}*: {{ label }} *SUCCESS*\n*Pipeline*: {{pipeline_url}}\nBuild log*: {{ build_status_url }}\n*Elapsed time*: {{ build_time }}\n"
     },
     "accessory": {
       "type": "image",

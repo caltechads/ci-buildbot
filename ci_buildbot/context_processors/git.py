@@ -10,6 +10,10 @@ from .base import AbstractContextProcessor
 
 
 class URLPatternsMixin:
+    """
+    A mixin that builds a set of f-strings to use when rendering links to commits,
+    projects and diffs to upstream git hosting providers.
+    """
 
     def build_url_patterns(self, repo: Repo) -> Dict[str, str]:
         """
@@ -19,6 +23,13 @@ class URLPatternsMixin:
 
         Detect the upstream provder by looking at the host for our upstream
         remote url a
+
+        .. note::
+            If our remote is a CodeStar connection, we assume it's a Bitbucket
+            repo, but this is not always the case.  Unfortunately, there's no
+            way to tell from the remote URL whether it's a Github or Bitbucket
+            repo, so we have to rely on the environment variable
+            ``CI_BUILDBOT_HOST`` and ``CI_BUILDBOT_GIT_OWNER`` to force it.
         """
         # https://caltech-imss-ads@bitbucket.org/caltech-imss-ads/exeter_api/src/0.10.2/
         url_patterns: Dict[str, str] = {}
@@ -26,8 +37,10 @@ class URLPatternsMixin:
         host = p.host
         owner = p.owner
         if host.startswith('codestar-connections'):
-            # FIXME: we really need to be able to see whether this is github or bitbucket
-            host = "bitbucket.org"
+            # if our host is a CodeStar connection, we can't tell implicitly
+            # what the actual upstream is, so we have to rely on environment
+            # variables to tell us, defaulting to Bitbucket
+            host = os.environ.get('CI_BUILDBOT_HOST', "bitbucket.org")
             owner = os.environ.get('CI_BUILDBOT_GIT_OWNER', "caltech-imss-ads")
         origin_url = f"https://{host}/{owner}/{p.repo}"
         if origin_url.endswith('.git'):
@@ -46,8 +59,26 @@ class URLPatternsMixin:
 
 
 class GitProcessor(URLPatternsMixin, AbstractContextProcessor):
+    """
+    A context processor that adds information about the current git repository.
 
-    def __init__(self):
+    This adds the following keys to the context:
+
+    * ``repo``: the URL of the upstream repository
+    * ``branch``: the name of the current branch
+    * ``sha``: the sha of the HEAD commit
+    * ``committer``: the author of the latest commit
+    * ``last_version_sha``: the sha of the commit for the previous version
+    * ``last_version_url``: the URL to the previous version in the upstream git
+      hosting provider
+    * ``previous_version``: the version number for the tag before this one
+    * ``diff_url``: the URL to the diff between the previous version and this one
+    * ``git_info``: a string containing the branch, commit, and committer of the
+      last commit
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.repo: Repo = Repo('.')
         self.url_patterns: Dict[str, str] = self.build_url_patterns(self.repo)
 
@@ -148,10 +179,20 @@ class GitProcessor(URLPatternsMixin, AbstractContextProcessor):
 
 class GitChangelogProcessor(URLPatternsMixin, AbstractContextProcessor):
     """
-    This needs to be used after GitMixin in the inheritance chain.
+    A context processor that adds information about the changelog for the
+    git repository.
+
+    This adds the following keys to the context:
+
+    * ``authors``: a list of all authors in those commits
+    * ``changelog``: a list of strings representing the commits
+
+    .. important::
+        This needs to be used after GitMixin in the inheritance chain.
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.repo: Repo = Repo('.')
         self.url_patterns = self.build_url_patterns(self.repo)
 

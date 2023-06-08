@@ -7,8 +7,13 @@ from .base import AbstractContextProcessor
 
 
 class DockerImageNameProcessor(AbstractContextProcessor):
+    """
+    This adds the key ``short_image`` to the context, which is the basename of
+    the Docker image without the repository name.
+    """
 
     def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.image: str = kwargs['image']
 
     def annotate(self, context: MessageContext) -> None:
@@ -16,8 +21,15 @@ class DockerImageNameProcessor(AbstractContextProcessor):
 
 
 class DockerProcessor(AbstractContextProcessor):
+    """
+    This the following keys to the context:
+
+    * ``image_id``: the short id of the Docker image
+    * ``image_size``: the size of the Docker image in MB
+    """
 
     def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.image: str = kwargs['image']
 
     def annotate(self, context: MessageContext) -> None:

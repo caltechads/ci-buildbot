@@ -8,9 +8,19 @@ from .base import AbstractContextProcessor
 
 
 class CodebuildProcessor(AbstractContextProcessor):
+    """
+    Adds the following keys to the context:
 
-    def __init__(self, **kwargs):
-        self.log_group: Optional[str] = kwargs['log_group']
+    * ``build_id``: the CodeBuild build id
+    * ``build_project_name``: the CodeBuild project name
+    * ``build_status_url``: the URL to the CodeBuild build status page
+    * ``account_id``: the AWS account id
+    * ``pipeline_url``: the URL to the CodePipeline pipeline status page
+    * ``pipeline``: the CodePipeline pipeline name
+    * ``status``: the CodePipeline pipeline status
+    * ``region``: the AWS region
+    * ``build_time``: the elapsed time for the build in minutes and seconds
+    """
 
     def get_build_log_url(self, context: MessageContext) -> None:
         # arn:aws:codebuild:us-west-2:467892444047:build/terraform-caltech-commons-DockerImageBuild:87bd7955-6c38-4554-b353-ac67880e1347

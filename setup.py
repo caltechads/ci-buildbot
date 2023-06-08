@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
 
 setup(
@@ -26,7 +26,7 @@ setup(
         "giturlparse >= 0.9.2",
         "click >= 7.0",
         "jinja2 >= 2.11.1",
-        "pydantic == 1.4",
+        "pydantic >= 1.6.2",
         "pytz == 2019.1",
         "sh == 1.13.1"
     ],

@@ -307,10 +307,9 @@ def report_docs():
 
 
 @report_docs.command('start', short_help="Report about starting a Sphinx docs build and deploy")
-@click.argument('url')
 @click.pass_context
-def report_docs_start(ctx, url):
-    blocks = DocsStartMessage().format(url=url)
+def report_docs_start(ctx):
+    blocks = DocsStartMessage().format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
@@ -339,10 +338,9 @@ def report_docs_success(ctx, url):
 
 
 @report_docs.command('failure', short_help="Report a failed Sphinx docs build and deploy")
-@click.argument('url')
 @click.pass_context
-def report_docs_failure(ctx, url):
-    blocks = DocsFailureMessage().format(url=url)
+def report_docs_failure(ctx):
+    blocks = DocsFailureMessage().format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(

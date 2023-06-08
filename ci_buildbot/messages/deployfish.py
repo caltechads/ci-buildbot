@@ -8,30 +8,39 @@ from .base import Message
 
 
 class DeployfishDeployStartMessage(Message):
+    """
+    Send a slack message about starting a deployfish service deploy.
+    """
     template = 'deploy_start.tpl'
     context_processors = [
+        NameVersionProcessor,
         DeployfishDeployProcessor,
         GitProcessor,
         CodebuildProcessor,
-        NameVersionProcessor,
     ]
 
 
 class DeployfishDeploySuccessMessage(Message):
+    """
+    Send a slack message about a successful deployfish service deploy.
+    """
     template = 'deploy_success.tpl'
     context_processors = [
+        NameVersionProcessor,
         DeployfishDeployProcessor,
         GitProcessor,
         CodebuildProcessor,
-        NameVersionProcessor,
     ]
 
 
 class DeployfishDeployFailureMessage(Message):
+    """
+    Send a slack message about a unsuccessful deployfish service deploy.
+    """
     template = 'deploy_failed.tpl'
     context_processors = [
+        NameVersionProcessor,
         DeployfishDeployProcessor,
         GitProcessor,
         CodebuildProcessor,
-        NameVersionProcessor,
     ]
