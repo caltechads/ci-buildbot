@@ -5,5 +5,4 @@ from .docker import *  # noqa:F403,F401
 from .generic import *  # noqa:F403,F401
 from .git import *  # noqa:F403,F401
 from .project import *  # noqa:F403,F401
-from .sphinx import *  # noqa:F403,F401
 from .unittest import *  # noqa:F403,F401
