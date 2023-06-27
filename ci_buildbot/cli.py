@@ -322,10 +322,9 @@ def report_docs_start(ctx):
 
 
 @report_docs.command('success', short_help="Report a successful Sphinx docs build and deploy")
-@click.argument('url')
 @click.pass_context
-def report_docs_success(ctx, url):
-    blocks = DocsSuccessMessage().format(url=url)
+def report_docs_success(ctx):
+    blocks = DocsSuccessMessage().format()
     client = ctx.obj['slack']
     try:
         client.chat_postMessage(
