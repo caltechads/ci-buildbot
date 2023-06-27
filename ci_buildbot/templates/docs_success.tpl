@@ -6,7 +6,7 @@
     "type": "section",
     "text": {
       "type": "mrkdwn",
-      "text": "*{{ last_version_url }}*: Sphinx build *SUCCESS*\n*Pipeline*: {{pipeline_url}}\n*Docs URL*: {{ docs_url }}\n*Build log*: {{ build_status_url }}\n*Elapsed time*: {{ build_time }}\n"
+      "text": "*{{ last_version_url }}*: Sphinx build *SUCCESS*\n*Pipeline*: {{pipeline_url}}\n*Build log*: {{ build_status_url }}\n*Elapsed time*: {{ build_time }}\n"
     },
     "accessory": {
       "type": "image",
