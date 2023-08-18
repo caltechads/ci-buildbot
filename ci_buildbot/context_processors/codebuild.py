@@ -23,17 +23,13 @@ class CodebuildProcessor(AbstractContextProcessor):
     """
 
     def get_build_log_url(self, context: MessageContext) -> None:
-        # arn:aws:codebuild:us-west-2:467892444047:build/terraform-caltech-commons-DockerImageBuild:87bd7955-6c38-4554-b353-ac67880e1347
         fields = os.environ['CODEBUILD_BUILD_ARN'].split(':')
         context['account_id'] = fields[4]
         context['build_project_name'] = fields[5].split('/')[1]
         context['build_id'] = fields[6]
-        # https://us-west-2.console.aws.amazon.com/codesuite/codebuild/467892444047/projects/terraform-caltech-commons-archive/build/terraform-caltech-commons-archive%3Aee76bb3e-fd96-4448-8644-eee93cd0d02b/log?region=us-west-2
-        # https://us-west-2.console.aws.amazon.com/codesuite/codebuild/467892444047/projects/terraform-caltech-commons-DockerImageBuild/build/terraform-caltech-commons-DockerImageBuild%87bd7955-6c38-4554-b353-ac67880e1347/log?region=us-west-2
         context['build_status_url'] = f"<https://{context['region']}.console.aws.amazon.com/codesuite/codebuild/{context['account_id']}/projects/{context['build_project_name']}/build/{context['build_project_name']}%3A{context['build_id']}/log?region=us-west-2|Click here>"
 
     def get_pipeline_url(self, context: MessageContext) -> None:
-        # https://us-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/terraform-caltech-commons/view?region=us-west-2
         # FIXME: detect region from the environment instead of hardcoding it to us-west-2
         context['pipeline'] = os.environ['CODEBUILD_INITIATOR'].split('/')[1]
         context['pipeline_url'] = f"<https://{context['region']}.console.aws.amazon.com/codesuite/codepipeline/pipelines/{context['pipeline']}/view?region=us-west-2|{context['pipeline']}>"

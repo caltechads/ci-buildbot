@@ -11,7 +11,8 @@ class GenericProcessor(AbstractContextProcessor):
     * ``label``: a user supplied label we got from the --label command line option
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
         self.label: Optional[str] = kwargs['label']
 
     def annotate(self, context: MessageContext) -> None:

@@ -31,7 +31,6 @@ class URLPatternsMixin:
             repo, so we have to rely on the environment variable
             ``CI_BUILDBOT_HOST`` and ``CI_BUILDBOT_GIT_OWNER`` to force it.
         """
-        # https://caltech-imss-ads@bitbucket.org/caltech-imss-ads/exeter_api/src/0.10.2/
         url_patterns: Dict[str, str] = {}
         p = parse(repo.remote().url)
         host = p.host
@@ -77,7 +76,7 @@ class GitProcessor(URLPatternsMixin, AbstractContextProcessor):
       last commit
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.repo: Repo = Repo('.')
         self.url_patterns: Dict[str, str] = self.build_url_patterns(self.repo)
@@ -191,7 +190,7 @@ class GitChangelogProcessor(URLPatternsMixin, AbstractContextProcessor):
         This needs to be used after GitMixin in the inheritance chain.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.repo: Repo = Repo('.')
         self.url_patterns = self.build_url_patterns(self.repo)
@@ -203,6 +202,9 @@ class GitChangelogProcessor(URLPatternsMixin, AbstractContextProcessor):
 
         * ``authors``: a list of all authors in those commits
         * ``changelog``: a list of strings representing the commits
+
+        Args:
+            context: the current message context
         """
         # get the changes between here and the previous tag
         changelog_commits = []

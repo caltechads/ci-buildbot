@@ -31,6 +31,9 @@ class NameVersionProcessor(AbstractContextProcessor):
 
         If not, we'll try to get it from Makefile by doing ``make image_name``
         for the name and ``make version`` for the version.
+
+        Args:
+            context: the current message context
         """
         super().annotate(context)
         setup_py = pathlib.Path.cwd() / 'setup.py'

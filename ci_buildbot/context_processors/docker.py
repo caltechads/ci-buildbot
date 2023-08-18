@@ -12,7 +12,7 @@ class DockerImageNameProcessor(AbstractContextProcessor):
     the Docker image without the repository name.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.image: str = kwargs['image']
 
@@ -28,7 +28,7 @@ class DockerProcessor(AbstractContextProcessor):
     * ``image_size``: the size of the Docker image in MB
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.image: str = kwargs['image']
 

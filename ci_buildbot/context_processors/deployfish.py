@@ -11,7 +11,7 @@ class DeployfishDeployProcessor(AbstractContextProcessor):
     * ``service``: the name of the ECS service being deployed
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.service: str = kwargs['service']
 
@@ -26,7 +26,8 @@ class DeployfishTasksDeployProcessor(AbstractContextProcessor):
     * ``tasks``: a list of the names of the ECS tasks being deployed
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
         self.tasks: List[str] = kwargs['tasks']
 
     def annotate(self, context: MessageContext) -> None:
