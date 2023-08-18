@@ -1,7 +1,6 @@
 import pathlib
 import subprocess
 
-from distutils.core import run_setup
 
 from ..typedefs import MessageContext
 from .base import AbstractContextProcessor
@@ -36,10 +35,18 @@ class NameVersionProcessor(AbstractContextProcessor):
         super().annotate(context)
         setup_py = pathlib.Path.cwd() / 'setup.py'
         if setup_py.exists():
-            # Extract some stuff from python itself
-            python_setup = run_setup(str(setup_py))
-            context['name'] = python_setup.get_name()  # type: ignore
-            context['version'] = python_setup.get_version()  # type: ignore
+            context['version'] = subprocess.run(
+                ['python', str(setup_py), '--version'],
+                capture_output=True,
+                text=True,
+                check=True
+            ).stdout.strip()
+            context['name'] = subprocess.run(
+                ['python', str(setup_py), '--name'],
+                capture_output=True,
+                text=True,
+                check=True
+            ).stdout.strip()
         else:
             # No setup.py; let's try Makefile
             makefile = pathlib.Path.cwd() / 'Makefile'
