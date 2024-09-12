@@ -91,7 +91,7 @@ class NameVersionProcessor(AbstractContextProcessor):
         if 'image_name:' not in result.stdout:
             msg = "Makefile does not contain an image_name target"
             raise ValueError(msg)
-        if 'version' not in result.stdout:
+        if 'version:' not in result.stdout:
             msg = "Makefile does not contain a version target"
             raise ValueError(msg)
         context["name"] = (
