@@ -1,5 +1,6 @@
 import datetime
 import os
+from typing import Dict  # noqa: UP035
 
 from git import Repo
 from giturlparse import parse
@@ -14,7 +15,7 @@ class URLPatternsMixin:
     projects and diffs to upstream git hosting providers.
     """
 
-    def build_url_patterns(self, repo: Repo) -> dict[str, str]:
+    def build_url_patterns(self, repo: Repo) -> Dict[str, str]:  # noqa: UP006
         """
         Build a set of f-strings to use when rendering links for commits,
         projects and diffs, and save them as :py:attr:`url_patterns`.  Different
@@ -30,7 +31,7 @@ class URLPatternsMixin:
             repo, so we have to rely on the environment variable
             ``CI_BUILDBOT_HOST`` and ``CI_BUILDBOT_GIT_OWNER`` to force it.
         """
-        url_patterns: dict[str, str] = {}
+        url_patterns: Dict[str, str] = {}  # noqa: UP006
         p = parse(repo.remote().url)
         host = p.host
         owner = p.owner
@@ -80,7 +81,7 @@ class GitProcessor(URLPatternsMixin, AbstractContextProcessor):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.repo: Repo = Repo(".")
-        self.url_patterns: dict[str, str] = self.build_url_patterns(self.repo)
+        self.url_patterns: Dict[str, str] = self.build_url_patterns(self.repo)  # noqa: UP006
 
     def __get_last_version(self, context: MessageContext) -> None:
         """

@@ -1,5 +1,6 @@
 import pathlib
 import subprocess
+from typing import Dict
 
 import toml
 
@@ -21,7 +22,7 @@ class NameVersionProcessor(AbstractContextProcessor):
     for the name and ``make version`` for the version.
     """
 
-    def setup_py(self, path: pathlib.Path) -> dict[str, str]:
+    def setup_py(self, path: pathlib.Path) -> Dict[str, str]:
         """
         Process a setup.py file and return the name and version.
 
@@ -36,7 +37,7 @@ class NameVersionProcessor(AbstractContextProcessor):
             A dictionary with the keys ``name`` and ``version``
 
         """
-        context: dict[str, str] = {}
+        context: Dict[str, str] = {}
         context["version"] = subprocess.run(
             ["/usr/bin/env", "python", str(path), "--version"],
             capture_output=True,
@@ -54,7 +55,7 @@ class NameVersionProcessor(AbstractContextProcessor):
         ).stdout.strip()
         return context
 
-    def makefile(self, path: pathlib.Path) -> dict[str, str]:
+    def makefile(self, path: pathlib.Path) -> Dict[str, str]:
         """
         Process a Makefile and return the name and version.
 
@@ -69,7 +70,7 @@ class NameVersionProcessor(AbstractContextProcessor):
             A dictionary with the keys ``name`` and ``version``
 
         """
-        context: dict[str, str] = {}
+        context: Dict[str, str] = {}
         # This command line extracts the names of the targets from the Makefile,
         # ignoring the implicit ones, and sorts them.
         command = [
@@ -102,7 +103,7 @@ class NameVersionProcessor(AbstractContextProcessor):
         )
         return context
 
-    def pyproject_toml(self, path: pathlib.Path) -> dict[str, str]:
+    def pyproject_toml(self, path: pathlib.Path) -> Dict[str, str]:
         """
         Process a pyproject.toml file and return the name and version.
 
@@ -117,7 +118,7 @@ class NameVersionProcessor(AbstractContextProcessor):
             A dictionary with the keys ``name`` and ``version``
 
         """
-        context: dict[str, str] = {}
+        context: Dict[str, str] = {}
         data = toml.load(path)
         if "project" not in data:
             msg = "pyproject.toml is a stub: no project section"

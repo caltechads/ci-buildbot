@@ -1,3 +1,5 @@
+from typing import List  # noqa: UP035
+
 from ..typedefs import MessageContext
 from .base import AbstractContextProcessor
 
@@ -26,7 +28,7 @@ class DeployfishTasksDeployProcessor(AbstractContextProcessor):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.tasks: list[str] = kwargs["tasks"]
+        self.tasks: List[str] = kwargs["tasks"]  # noqa: UP006
 
     def annotate(self, context: MessageContext) -> None:
         context["tasks"] = self.tasks

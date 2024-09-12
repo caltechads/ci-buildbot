@@ -1,7 +1,6 @@
-from __future__ import annotations
+from typing import TYPE_CHECKING, Optional
 
 from .base import AbstractContextProcessor
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..typedefs import MessageContext
@@ -25,7 +24,7 @@ class UnittestReportGroupProcessor(AbstractContextProcessor):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.report_group: str | None = kwargs["report_group"]
+        self.report_group: Optional[str] = kwargs["report_group"]  # noqa: FA100
 
     def get_reports_url(self, context: "MessageContext") -> None:
         """
