@@ -8,6 +8,7 @@ from slack.errors import SlackApiError
 
 import ci_buildbot
 
+from .context_processors.project import NameVersionProcessor
 from .messages import (
     ArchiveCodeMessage,
     DeployfishDeployFailureMessage,
@@ -68,6 +69,31 @@ def settings(ctx):
 def channels(ctx):
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(ctx.obj["slack"].conversations_list(types="private_channel")["channels"])
+
+
+@cli.group("project", short_help="Project information related commands")
+def project():
+    pass
+
+
+@project.command("name", short_help="Print the name of the project")
+def project_name():
+    """
+    Get the name and version of the project.
+    """
+    context = {}
+    NameVersionProcessor().annotate(context)
+    click.echo(context["name"])
+
+
+@project.command("version", short_help="Print the version of the project")
+def project_version():
+    """
+    Get the name and version of the project.
+    """
+    context = {}
+    NameVersionProcessor().annotate(context)
+    click.echo(context["version"])
 
 
 @cli.group("report", short_help="Report about a build step")
@@ -251,7 +277,7 @@ def report_deployfish_failure(ctx, service):
 @report.group(
     "deployfish-tasks",
     short_help="A group of commands that report about a Deployfish one-off tasks "
-               "build step",
+    "build step",
 )
 def report_deployfish_tasks():
     pass
