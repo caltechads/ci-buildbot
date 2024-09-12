@@ -76,18 +76,23 @@ class NameVersionProcessor(AbstractContextProcessor):
             "make",
             "-pRrq",
             "-f",
-            str(path),
-            ":",
-            "2>/dev/null",
-            "|",
-            "awk",
-            "-F':' '/^[a-zA-Z0-9][^$#\t=]*:([^=]|$)/ {print $1}'",
-            "|",
-            "sort",
-            "-u",
+            str(path)
         ]
-        if "image_name" not in subprocess.check_output(command).decode("utf8"):
+        try:
+            result = subprocess.run(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+        except subprocess.CalledProcessError as e:
+            print(e.stderr)
+            raise
+        if 'image_name:' not in result.stdout:
             msg = "Makefile does not contain an image_name target"
+            raise ValueError(msg)
+        if 'version' not in result.stdout:
+            msg = "Makefile does not contain a version target"
             raise ValueError(msg)
         context["name"] = (
             subprocess.check_output(["make", "image_name"]).decode("utf8").strip()
@@ -148,20 +153,20 @@ class NameVersionProcessor(AbstractContextProcessor):
             except ValueError:
                 pass
             else:
-                return context
-        if makefile.exists():
-            try:
-                context.update(self.makefile(makefile))
-            except ValueError:
-                pass
-            else:
-                return context
+                return
         if pyproject_toml.exists():
             try:
                 context.update(self.pyproject_toml(pyproject_toml))
             except ValueError:
                 pass
             else:
-                return context
+                return
+        if makefile.exists():
+            try:
+                context.update(self.makefile(makefile))
+            except ValueError:
+                pass
+            else:
+                return
         msg = "Cannot determine project name and version"
         raise ImproperlyConfiguredError(msg)
