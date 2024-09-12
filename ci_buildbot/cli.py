@@ -128,7 +128,7 @@ def report_docker():
 )
 @click.argument("image")
 @click.pass_context
-def report_docker_start(ctx, image: str, changelog: bool = False) -> None:
+def report_docker_start(ctx, image: str, changelog: bool) -> None:  # noqa: FBT001
     blocks = DockerStartMessage().format(image=image, changelog=changelog)
     client = ctx.obj["slack"]
     try:
