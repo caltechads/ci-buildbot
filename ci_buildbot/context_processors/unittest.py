@@ -1,7 +1,10 @@
-from typing import Optional
+from __future__ import annotations
 
-from ..typedefs import MessageContext
 from .base import AbstractContextProcessor
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..typedefs import MessageContext
 
 
 class UnittestReportGroupProcessor(AbstractContextProcessor):
@@ -22,18 +25,23 @@ class UnittestReportGroupProcessor(AbstractContextProcessor):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.report_group: Optional[str] = kwargs['report_group']
+        self.report_group: str | None = kwargs["report_group"]
 
-    def get_reports_url(self, context: MessageContext) -> None:
+    def get_reports_url(self, context: "MessageContext") -> None:
         """
         Add the ``report_group_url`` key to the context.
 
         Args:
             context: the current message context
-        """
-        context['report_group_url'] = f"<https://{context['region']}.console.aws.amazon.com/codesuite/codebuild/{context['account_id']}/testReports/reportGroups/{self.report_group}?region={context['region']}|{context['report_group']}>"
 
-    def annotate(self, context: MessageContext) -> None:
+        """
+        context["report_group_url"] = (
+            f"<https://{context['region']}.console.aws.amazon.com/codesuite/codebuild/"
+            f"{context['account_id']}/testReports/reportGroups/{self.report_group}"
+            f"?region={context['region']}|{context['report_group']}>"
+        )
+
+    def annotate(self, context: "MessageContext") -> None:
         """
         Add the following keys to the context:
 
@@ -44,6 +52,7 @@ class UnittestReportGroupProcessor(AbstractContextProcessor):
 
         Args:
             context (_type_): _description_
+
         """
-        context['report_group'] = self.report_group
+        context["report_group"] = self.report_group
         self.get_reports_url(context)

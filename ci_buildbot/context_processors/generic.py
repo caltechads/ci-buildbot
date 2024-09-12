@@ -1,5 +1,3 @@
-from typing import Optional
-
 from ..typedefs import MessageContext
 from .base import AbstractContextProcessor
 
@@ -13,7 +11,7 @@ class GenericProcessor(AbstractContextProcessor):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.label: Optional[str] = kwargs['label']
+        self.label: str | None = kwargs["label"]
 
     def annotate(self, context: MessageContext) -> None:
-        context['label'] = self.label
+        context["label"] = self.label

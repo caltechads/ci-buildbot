@@ -1,16 +1,18 @@
+from typing import ClassVar
+
 from ..context_processors import (
-    GenericProcessor,
+    AbstractContextProcessor,
     CodebuildProcessor,
+    GenericProcessor,
     GitProcessor,
-    NameVersionProcessor
+    NameVersionProcessor,
 )
 from .base import Message
 
 
 class GeneralStartMessage(Message):
-
-    template = 'general_start.tpl'
-    context_processors = [
+    template = "general_start.tpl"
+    context_processors: ClassVar[list[type[AbstractContextProcessor]]] = [
         NameVersionProcessor,
         GenericProcessor,
         GitProcessor,
@@ -19,9 +21,8 @@ class GeneralStartMessage(Message):
 
 
 class GeneralSuccessMessage(Message):
-
-    template = 'general_success.tpl'
-    context_processors = [
+    template = "general_success.tpl"
+    context_processors: ClassVar[list[type[AbstractContextProcessor]]] = [
         NameVersionProcessor,
         GenericProcessor,
         GitProcessor,
@@ -30,9 +31,8 @@ class GeneralSuccessMessage(Message):
 
 
 class GeneralFailureMessage(Message):
-
-    template = 'general_failed.tpl'
-    context_processors = [
+    template = "general_failed.tpl"
+    context_processors: ClassVar[list[type[AbstractContextProcessor]]] = [
         NameVersionProcessor,
         GenericProcessor,
         GitProcessor,

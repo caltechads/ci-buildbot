@@ -1,8 +1,11 @@
+from typing import ClassVar
+
 from ..context_processors import (
-    DeployfishTasksDeployProcessor,
+    AbstractContextProcessor,
     CodebuildProcessor,
+    DeployfishTasksDeployProcessor,
     GitProcessor,
-    NameVersionProcessor
+    NameVersionProcessor,
 )
 from .base import Message
 
@@ -12,8 +15,8 @@ class DeployfishTasksDeployStartMessage(Message):
     Send a slack message about starting a deployfish tasks deploy.
     """
 
-    template = 'deploy_tasks_start.tpl'
-    context_processors = [
+    template: str = "deploy_tasks_start.tpl"
+    context_processors: ClassVar[list[type[AbstractContextProcessor]]] = [
         NameVersionProcessor,
         DeployfishTasksDeployProcessor,
         CodebuildProcessor,
@@ -25,8 +28,9 @@ class DeployfishTasksDeploySuccessMessage(Message):
     """
     Send a slack message about a successful deployfish tasks deploy.
     """
-    template = 'deploy_tasks_success.tpl'
-    context_processors = [
+
+    template = "deploy_tasks_success.tpl"
+    context_processors: ClassVar[list[type[AbstractContextProcessor]]] = [
         NameVersionProcessor,
         DeployfishTasksDeployProcessor,
         CodebuildProcessor,
@@ -38,8 +42,9 @@ class DeployfishTasksDeployFailureMessage(Message):
     """
     Send a slack message about an unsuccessful deployfish tasks deploy.
     """
-    template = 'deploy_tasks_failed.tpl'
-    context_processors = [
+
+    template = "deploy_tasks_failed.tpl"
+    context_processors: ClassVar[list[type[AbstractContextProcessor]]] = [
         NameVersionProcessor,
         DeployfishTasksDeployProcessor,
         CodebuildProcessor,
