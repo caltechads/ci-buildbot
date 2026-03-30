@@ -10,7 +10,9 @@ import ci_buildbot
 
 from .context_processors.project import NameVersionProcessor
 from .messages import (
-    ArchiveCodeMessage,
+    ArchiveFailureMessage,
+    ArchiveStartMessage,
+    ArchiveSuccessMessage,
     DeployfishDeployFailureMessage,
     DeployfishDeployStartMessage,
     DeployfishDeploySuccessMessage,
@@ -43,7 +45,7 @@ from .settings import Settings
 @click.pass_context
 def cli(ctx, version):
     """
-    buildbot command line interaface.
+    The buildbot command line interface.
     """
     ctx.obj["settings"] = Settings()
     ctx.obj["slack"] = slack.WebClient(token=ctx.obj["settings"].api_token)
@@ -101,10 +103,54 @@ def report():
     pass
 
 
-@report.command("archive", short_help="Report about an archive-to-code-drop step")
+@report.group(
+    "archive",
+    invoke_without_command=True,
+    short_help="A group of commands that report about an archive-to-code-drop step",
+)
 @click.pass_context
-def archive(ctx):
-    blocks = ArchiveCodeMessage().format()
+def report_archive(ctx):
+    # For backwards compatibility, if no subcommand is provided, invoke the "success"
+    # subcommand.
+    if ctx.invoked_subcommand is None:
+        ctx.invoke(report_archive_success)
+
+@report_archive.command(
+    "start", short_help="Report about starting an archive-to-code-drop step"
+)
+@click.pass_context
+def report_archive_start(ctx):
+    blocks = ArchiveStartMessage().format()
+    client = ctx.obj["slack"]
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj["settings"].channel, blocks=blocks, as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_archive.command(
+    "failure", short_help="Report about a failed archive-to-code-drop step"
+)
+@click.pass_context
+def report_archive_failure(ctx):
+    blocks = ArchiveFailureMessage().format()
+    client = ctx.obj["slack"]
+    try:
+        client.chat_postMessage(
+            channel=ctx.obj["settings"].channel, blocks=blocks, as_user=True
+        )
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
+
+
+@report_archive.command(
+    "success", short_help="Report about a successful archive-to-code-drop step"
+)
+@click.pass_context
+def report_archive_success(ctx):
+    blocks = ArchiveSuccessMessage().format()
     client = ctx.obj["slack"]
     try:
         client.chat_postMessage(
@@ -116,7 +162,7 @@ def archive(ctx):
 
 @report.group(
     "docker",
-    short_help="A group of commands that report about a Docker bmage build step",
+    short_help="A group of commands that report about a Docker image build step",
 )
 def report_docker():
     pass
