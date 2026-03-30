@@ -1,6 +1,5 @@
 import pathlib
 import subprocess
-from typing import Dict
 
 import toml
 
@@ -22,7 +21,7 @@ class NameVersionProcessor(AbstractContextProcessor):
     for the name and ``make version`` for the version.
     """
 
-    def setup_py(self, path: pathlib.Path) -> Dict[str, str]:
+    def setup_py(self, path: pathlib.Path) -> dict[str, str]:
         """
         Process a setup.py file and return the name and version.
 
@@ -37,7 +36,7 @@ class NameVersionProcessor(AbstractContextProcessor):
             A dictionary with the keys ``name`` and ``version``
 
         """
-        context: Dict[str, str] = {}
+        context: dict[str, str] = {}
         context["version"] = subprocess.run(
             ["/usr/bin/env", "python", str(path), "--version"],
             capture_output=True,
@@ -55,7 +54,7 @@ class NameVersionProcessor(AbstractContextProcessor):
         ).stdout.strip()
         return context
 
-    def makefile(self, path: pathlib.Path) -> Dict[str, str]:
+    def makefile(self, path: pathlib.Path) -> dict[str, str]:
         """
         Process a Makefile and return the name and version.
 
@@ -70,7 +69,7 @@ class NameVersionProcessor(AbstractContextProcessor):
             A dictionary with the keys ``name`` and ``version``
 
         """
-        context: Dict[str, str] = {}
+        context: dict[str, str] = {}
         # This command line extracts the names of the targets from the Makefile,
         # ignoring the implicit ones, and sorts them.
         command = [
@@ -89,10 +88,10 @@ class NameVersionProcessor(AbstractContextProcessor):
         except subprocess.CalledProcessError as e:
             print(e.stderr)
             raise
-        if 'image_name:' not in result.stdout:
+        if "image_name:" not in result.stdout:
             msg = "Makefile does not contain an image_name target"
             raise ValueError(msg)
-        if 'version:' not in result.stdout:
+        if "version:" not in result.stdout:
             msg = "Makefile does not contain a version target"
             raise ValueError(msg)
         context["name"] = (
@@ -103,7 +102,7 @@ class NameVersionProcessor(AbstractContextProcessor):
         )
         return context
 
-    def pyproject_toml(self, path: pathlib.Path) -> Dict[str, str]:
+    def pyproject_toml(self, path: pathlib.Path) -> dict[str, str]:
         """
         Process a pyproject.toml file and return the name and version.
 
@@ -118,7 +117,7 @@ class NameVersionProcessor(AbstractContextProcessor):
             A dictionary with the keys ``name`` and ``version``
 
         """
-        context: Dict[str, str] = {}
+        context: dict[str, str] = {}
         data = toml.load(path)
         if "project" not in data:
             msg = "pyproject.toml is a stub: no project section"
