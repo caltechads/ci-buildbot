@@ -45,7 +45,7 @@ from .settings import Settings
 @click.pass_context
 def cli(ctx, version):
     """
-    buildbot command line interaface.
+    The buildbot command line interface.
     """
     ctx.obj["settings"] = Settings()
     ctx.obj["slack"] = slack.WebClient(token=ctx.obj["settings"].api_token)
@@ -162,7 +162,7 @@ def report_archive_success(ctx):
 
 @report.group(
     "docker",
-    short_help="A group of commands that report about a Docker bmage build step",
+    short_help="A group of commands that report about a Docker image build step",
 )
 def report_docker():
     pass
