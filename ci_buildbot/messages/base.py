@@ -65,4 +65,8 @@ class Message:
         context["buildbot"] = f"ci-buildbot-{__version__}"
         template = jinja_env.get_template(self.get_template())
         rendered = template.render(**context)
-        return json.loads(rendered)
+        try:
+            return json.loads(rendered)
+        except json.JSONDecodeError:
+            print(rendered)
+            raise

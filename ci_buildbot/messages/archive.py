@@ -12,7 +12,8 @@ from .base import Message
 
 class ArchiveStartMessage(Message):
     """
-    Used to send a slack message about starting to archive code tarballs to an artifactory.
+    Used to send a slack message about starting to archive code tarballs to an
+    artifactory.
     """
 
     template: str = "archive_start.tpl"
@@ -37,9 +38,11 @@ class ArchiveSuccessMessage(Message):
         CodebuildProcessor,
     ]
 
+
 class ArchiveFailureMessage(Message):
     """
-    Used to send a slack message about failing to archive code tarballs to an artifactory.
+    Used to send a slack message about failing to archive code tarballs to an
+    artifactory.
     """
 
     template: str = "archive_failed.tpl"

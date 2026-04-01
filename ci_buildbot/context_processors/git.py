@@ -42,8 +42,7 @@ class URLPatternsMixin:
             host = os.environ.get("CI_BUILDBOT_HOST", "bitbucket.org")
             owner = os.environ.get("CI_BUILDBOT_GIT_OWNER", "caltech-imss-ads")
         origin_url = f"https://{host}/{owner}/{p.repo}"
-        if origin_url.endswith(".git"):
-            origin_url = origin_url[:-4]
+        origin_url = origin_url.removesuffix(".git")
         if p.github:
             url_patterns["commit"] = f"<{origin_url}/commit/" + "{sha}|{sha}>"
             url_patterns["project"] = f"<{origin_url}/tree/" + "{version}|{name}>"
@@ -167,7 +166,7 @@ class GitProcessor(URLPatternsMixin, AbstractContextProcessor):
             context: the current message context
 
         """
-        super().annotate(context)
+        super().annotate(context)  # type: ignore[safe-super]
         headcommit = self.repo.head.commit
         context["committer"] = str(headcommit.author)
         context["sha"] = headcommit.hexsha
@@ -192,13 +191,19 @@ class GitChangelogProcessor(URLPatternsMixin, AbstractContextProcessor):
     * ``authors``: a list of all authors in those commits
     * ``changelog``: a list of strings representing the commits
 
-    .. important::
+    Important:
         This needs to be used after GitMixin in the inheritance chain.
+
+    Note:
+        Slack text blocks must be limited to 3000 characters.
+
     """
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
+        #: The git repository to use
         self.repo: Repo = Repo(".")
+        #: The URL patterns to use for the git repository
         self.url_patterns = self.build_url_patterns(self.repo)
 
     def annotate(self, context: MessageContext) -> None:
@@ -226,7 +231,7 @@ class GitChangelogProcessor(URLPatternsMixin, AbstractContextProcessor):
             except IndexError:
                 # We really should never get here
                 break
-        changelog = []
+        changelog: list[str] = []
         authors = set()
         for commit in changelog_commits:
             authors.add(commit.author.name)
@@ -234,8 +239,19 @@ class GitChangelogProcessor(URLPatternsMixin, AbstractContextProcessor):
                 "%Y/%m/%d"
             )
             commit_link = self.url_patterns["commit"].format(sha=commit.hexsha[0:7])
-            # escape any double quotes in the summary
-            summary = commit.summary.replace('"', r"\"")
-            changelog.append(f"{commit_link} [{d}] {summary} - {commit.author!s}")
+            # Replace double quotes with single quotes in the summary
+            summary = str(commit.summary).replace('"', "'")
+            summary = summary.replace(r"\'", "'")
+            if (
+                len(
+                    "\n".join(changelog)
+                    + f"{commit_link} [{d}] {summary} - {commit.author!s}"
+                )
+                < self.MAX_SLACK_TEXT_LENGTH - 500
+            ):
+                changelog.append(f"{commit_link} [{d}] {summary} - {commit.author!s}")
+            else:
+                changelog.append("[truncated]")
+                break
         context["authors"] = sorted(authors)
         context["changelog"] = changelog
