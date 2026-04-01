@@ -104,6 +104,10 @@ ignore_missing_imports = true
 module = "slack.*"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "pytz.*"
+ignore_missing_imports = true
+
 [tool.ruff]
 # Same as Black.
 line-length = 88
