@@ -10,7 +10,7 @@
     },
     "accessory": {
       "type": "image",
-      "image_url":  "https://ads-utils-icons.s3-us-west-2.amazonaws.com/ci-buildbot/flask-grey.png",
+      "image_url":  "https://ads-utils-icons.resources.caltech.edu/ci-buildbot/flask-grey.png",
       "alt_text": "Unittests start"
     }
   },

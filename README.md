@@ -39,7 +39,7 @@ For the gray icons (`foo-start.png`), use #909090 as the icon color.
 For the green icons (`foo-success.png`), use #0D6B19 as the icon color.
 For the red icons (`foo-failure.png`), use #801B0B as the icon color.
 
-`ci-buildbot` tells slack to retrieve the icons from an S3 bucket: ads-utils-icons.s3.amanzonaws.com.  Do this to sync `./icons` to S3:
+`ci-buildbot` tells slack to retrieve the icons from: https://ads-utils-icons.resources.caltech.edu/.  Do this to sync `./icons` to S3:
 
 ```bash
 make icons

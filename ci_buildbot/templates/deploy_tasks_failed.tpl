@@ -10,7 +10,7 @@
     },
     "accessory": {
       "type": "image",
-      "image_url":  "https://ads-utils-icons.s3-us-west-2.amazonaws.com/ci-buildbot/deploy-tasks-failure.png",
+      "image_url":  "https://ads-utils-icons.resources.caltech.edu/ci-buildbot/deploy-tasks-failure.png",
       "alt_text": "Deploy tasks failed"
     }
   },
